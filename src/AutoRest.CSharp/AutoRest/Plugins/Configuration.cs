@@ -9,7 +9,7 @@ namespace AutoRest.CSharp.AutoRest.Plugins
 {
     internal class Configuration
     {
-        public Configuration(string outputFolder, string? ns, string? name, string[] sharedSourceFolders, bool saveInputs, bool azureArm, bool publicClients, bool modelNamespace, bool headAsBoolean, bool skipCSProjPackageReference)
+        public Configuration(string outputFolder, string? ns, string? name, string[] sharedSourceFolders, bool saveInputs, bool azureArm, bool publicClients, bool modelNamespace, bool headAsBoolean, bool skipCSProjPackageReference, bool lowLevelClient)
         {
             OutputFolder = outputFolder;
             Namespace = ns;
@@ -21,6 +21,7 @@ namespace AutoRest.CSharp.AutoRest.Plugins
             ModelNamespace = modelNamespace;
             HeadAsBoolean = headAsBoolean;
             SkipCSProjPackageReference = skipCSProjPackageReference;
+            LowLevelClient = lowLevelClient;
         }
 
 
@@ -35,6 +36,7 @@ namespace AutoRest.CSharp.AutoRest.Plugins
         public bool HeadAsBoolean { get; }
         public bool SkipCSProjPackageReference { get; }
         public static string ProjectRelativeDirectory = "../";
+        public bool LowLevelClient { get; }
 
         public static Configuration GetConfiguration(IPluginCommunication autoRest)
         {
@@ -48,7 +50,8 @@ namespace AutoRest.CSharp.AutoRest.Plugins
                 autoRest.GetValue<bool?>("public-clients").GetAwaiter().GetResult() ?? false,
                 autoRest.GetValue<bool?>("model-namespace").GetAwaiter().GetResult() ?? true,
                 autoRest.GetValue<bool?>("head-as-boolean").GetAwaiter().GetResult() ?? false,
-                autoRest.GetValue<bool?>("skip-csproj-packagereference").GetAwaiter().GetResult() ?? false
+                autoRest.GetValue<bool?>("skip-csproj-packagereference").GetAwaiter().GetResult() ?? false,
+                autoRest.GetValue<bool?>("low-level-client").GetAwaiter().GetResult() ?? false
             );
 
         }

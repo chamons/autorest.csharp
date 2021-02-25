@@ -39,7 +39,6 @@ namespace AutoRest.CSharp.AutoRest.Plugins
             var context = new BuildContext(await codeModelTask, configuration, sourceInputModel);
 
             var modelWriter = new ModelWriter();
-            var clientWriter = new ClientWriter();
             var restClientWriter = new RestClientWriter();
             var serializeWriter = new SerializationWriter();
             var headerModelModelWriter = new ResponseHeaderGroupWriter();
@@ -57,12 +56,15 @@ namespace AutoRest.CSharp.AutoRest.Plugins
                 project.AddGeneratedFile($"Models/{name}.Serialization.cs", serializerCodeWriter.ToString());
             }
 
-            foreach (var client in context.Library.RestClients)
+            if (!context.Configuration.LowLevelClient)
             {
-                var restCodeWriter = new CodeWriter();
-                restClientWriter.WriteClient(restCodeWriter, client);
+                foreach (var client in context.Library.RestClients)
+                {
+                    var restCodeWriter = new CodeWriter();
+                    restClientWriter.WriteClient(restCodeWriter, client);
 
-                project.AddGeneratedFile($"{client.Type.Name}.cs", restCodeWriter.ToString());
+                    project.AddGeneratedFile($"{client.Type.Name}.cs", restCodeWriter.ToString());
+                }
             }
 
             foreach (ResponseHeaderGroupType responseHeaderModel in context.Library.HeaderModels)
@@ -76,7 +78,17 @@ namespace AutoRest.CSharp.AutoRest.Plugins
             foreach (var client in context.Library.Clients)
             {
                 var codeWriter = new CodeWriter();
-                clientWriter.WriteClient(codeWriter, client, context.Configuration);
+
+                if (context.Configuration.LowLevelClient)
+                {
+                    var lowLevelClientWriter = new LowLevelClientWriter ();
+                    lowLevelClientWriter.WriteClient(codeWriter, client, context.Configuration);
+                }
+                else
+                {
+                    var clientWriter = new ClientWriter();
+                    clientWriter.WriteClient(codeWriter, client, context.Configuration);
+                }
 
                 project.AddGeneratedFile($"{client.Type.Name}.cs", codeWriter.ToString());
             }

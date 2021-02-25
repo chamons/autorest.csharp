@@ -8,18 +8,25 @@ info: !<!Info>
     name: Microsoft Cognitive Services
     email: mlapi@microsoft.com
     url: 'https://azure.microsoft.com/en-us/services/cognitive-services/text-analytics/'
-  title: CognitiveServices.TextAnalytics
+  title: Azure.AI.TextAnalytics
 schemas: !<!Schemas> 
   booleans:
-    - !<!BooleanSchema> &ref_96
+    - !<!BooleanSchema> &ref_120
       type: boolean
       apiVersions:
         - !<!ApiVersion> 
-          version: v3.0-preview.1
+          version: v3.1-preview.1
       language: !<!Languages> 
         default:
           name: Boolean
           description: ''
+      protocol: !<!Protocols> {}
+    - !<!BooleanSchema> &ref_86
+      type: boolean
+      language: !<!Languages> 
+        default:
+          name: Boolean
+          description: The indicator representing if the opinion is negated.
       protocol: !<!Protocols> {}
   numbers:
     - !<!NumberSchema> &ref_10

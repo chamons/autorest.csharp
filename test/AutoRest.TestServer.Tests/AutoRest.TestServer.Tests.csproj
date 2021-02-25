@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.2.2" />
+    <Reference Include="C:\Users\chhamo\Programming\azure-sdk-for-net\artifacts\bin\Azure.Core.Experimental\Debug\netstandard2.0\Azure.Core.dll" />
     <PackageReference Include="Azure.Identity" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="nunit" Version="3.12.0" />
