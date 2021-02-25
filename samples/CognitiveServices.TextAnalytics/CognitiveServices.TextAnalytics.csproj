@@ -1,13 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+
+  <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>annotations</Nullable>
+    <RestoreSources>$(RestoreSources);C:\Users\chhamo\nuget\;https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.6.0" />
+    <PackageReference Include="Azure.Core" Version="1.10.0-alpha.20210224.1" />
+    <PackageReference Include="Azure.Core.Experimental" Version="0.1.0-alpha.20210224.1" />
   </ItemGroup>
 
 </Project>
