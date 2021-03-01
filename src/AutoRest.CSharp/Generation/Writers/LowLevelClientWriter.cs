@@ -154,14 +154,22 @@ namespace AutoRest.CSharp.Generation.Writers
 
         private void WriteClientCtors(CodeWriter writer, Client client)
         {
-            // Write the protected mock ctor
+            WriteEmptyConstructor(writer, client);
+            WriteSimplifiedConstructor(writer, client);
+            WriteFullConstructor(writer, client);
+        }
+
+        private void WriteEmptyConstructor (CodeWriter writer, Client client)
+        {
             writer.WriteXmlDocumentationSummary($"Initializes a new instance of {client.Type.Name} for mocking.");
             using (writer.Scope($"protected {client.Type.Name:D}()"))
             {
             }
             writer.Line();
+        }
 
-            // Write the simplified 2 param ctor
+        private void WriteSimplifiedConstructor (CodeWriter writer, Client client)
+        {
             writer.WriteXmlDocumentationSummary($"Initializes a new instance of {client.Type.Name}");
             foreach (Parameter parameter in client.RestClient.Parameters)
             {
@@ -181,8 +189,10 @@ namespace AutoRest.CSharp.Generation.Writers
             {
             }
             writer.Line();
+        }
 
-            // Write the full 3param ctor
+        private void WriteFullConstructor (CodeWriter writer, Client client)
+        {
             writer.WriteXmlDocumentationSummary($"Initializes a new instance of {client.Type.Name}");
             foreach (Parameter parameter in client.RestClient.Parameters)
             {
