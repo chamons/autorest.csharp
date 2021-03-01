@@ -2,23 +2,14 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Linq;
 using AutoRest.CSharp.AutoRest.Plugins;
 using AutoRest.CSharp.Generation.Types;
 using AutoRest.CSharp.Output.Models;
-using AutoRest.CSharp.Output.Models.Requests;
 using AutoRest.CSharp.Output.Models.Shared;
-using AutoRest.CSharp.Output.Models.Serialization;
-using AutoRest.CSharp.Output.Models.Types;
-using AutoRest.CSharp.Output.Models.Serialization.Json;
-using AutoRest.CSharp.Output.Models.Serialization.Xml;
-using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
-using AutoRest.CSharp.Utilities;
 
 namespace AutoRest.CSharp.Generation.Writers
 {
@@ -27,8 +18,7 @@ namespace AutoRest.CSharp.Generation.Writers
         public void WriteClient(CodeWriter writer, Client client, Configuration configuration)
         {
             var cs = client.Type;
-            var @namespace = cs.Namespace + ".Protocol";
-            using (writer.Namespace(@namespace))
+            using (writer.Namespace(cs.Namespace + ".Protocol"))
             {
                 writer.WriteXmlDocumentationSummary(client.Description);
                 using (writer.Scope($"{client.Declaration.Accessibility} partial class {cs.Name}"))
@@ -106,8 +96,7 @@ namespace AutoRest.CSharp.Generation.Writers
                 }
                 else
                 {
-                    Parameter parameter = parameters[i];
-                    writer.WriteParameter(parameter);
+                    writer.WriteParameter(parameters[i]);
                 }
             }
             writer.Line($"{typeof(CancellationToken)} cancellationToken = default)");
@@ -125,11 +114,11 @@ namespace AutoRest.CSharp.Generation.Writers
 
                 if (useDynamic)
                 {
-                    writer.Line($"req.Content = DynamicContent.Create(ToJsonData(body));");
+                    writer.Line($"req.Content = {typeof(Azure.Core.DynamicContent)}.Create(ToJsonData(body));");
                 }
                 else
                 {
-                    writer.Line($"req.Content = DynamicContent.Create(body);");
+                    writer.Line($"req.Content = {typeof(Azure.Core.DynamicContent)}.Create(body);");
                 }
 
                 if (async)
@@ -185,10 +174,9 @@ namespace AutoRest.CSharp.Generation.Writers
             {
                 writer.WriteParameter(parameter);
             }
-            // Hamons - Hack - Should use typeof here
             writer.RemoveTrailingComma();
             writer.Append($", AzureKeyCredential {KeyCredentialVariable}");
-            writer.Line($") : this(endpoint, credential, new Azure.Core.ProtocolClientOptions())");
+            writer.Line($") : this(endpoint, credential, new {typeof(Azure.Core.ProtocolClientOptions)}())");
             using (writer.Scope())
             {
             }
@@ -208,10 +196,9 @@ namespace AutoRest.CSharp.Generation.Writers
             {
                 writer.WriteParameter(parameter);
             }
-            // Hack - Should use typeof here
             writer.RemoveTrailingComma();
             writer.Append($", AzureKeyCredential {KeyCredentialVariable}");
-            writer.Append($", Azure.Core.ProtocolClientOptions {ProtocolOptions}");
+            writer.Append($", {typeof(Azure.Core.ProtocolClientOptions)} {ProtocolOptions}");
             writer.Line($")");
 
             using (writer.Scope())
@@ -223,7 +210,7 @@ namespace AutoRest.CSharp.Generation.Writers
                 }
                 // HACK - Should be named so not this.
                 writer.Line($"this.{EndpointProperty} = {EndpointParameter};");
-                writer.Line($"{PipelineField} = HttpPipelineBuilder.Build({ProtocolOptions}, new AzureKeyCredentialPolicy({KeyCredentialVariable}, AuthorizationHeader));");
+                writer.Line($"{PipelineField} =  {typeof(HttpPipelineBuilder)}.Build({ProtocolOptions}, new {typeof(AzureKeyCredentialPolicy)}({KeyCredentialVariable}, AuthorizationHeader));");
             }
             writer.Line();
         }
