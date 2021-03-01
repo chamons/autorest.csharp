@@ -81,7 +81,7 @@ namespace AutoRest.CSharp.Generation.Writers
                 }
 
                 //TODO: Duplicate code between query and header parameter processing logic
-                foreach (var queryParameter in clientMethod.Request.Query.Skip(lowLevel ? 1 : 0))
+                foreach (var queryParameter in clientMethod.Request.Query)
                 {
                     WriteQueryParameter(writer, uri, queryParameter);
                 }

@@ -113,6 +113,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/entities/recognition/general", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
@@ -203,6 +207,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/entities/recognition/pii", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
@@ -281,6 +289,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/entities/linking", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
@@ -351,6 +363,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/keyPhrases", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
@@ -417,6 +433,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/languages", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
@@ -491,6 +511,10 @@ namespace CognitiveServices.TextAnalytics.Protocol
             uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
             uri.AppendPath("/sentiment", false);
+            if (modelVersion != null)
+            {
+                uri.AppendQuery("model-version", modelVersion, true);
+            }
             if (showStats != null)
             {
                 uri.AppendQuery("showStats", showStats.Value, true);
