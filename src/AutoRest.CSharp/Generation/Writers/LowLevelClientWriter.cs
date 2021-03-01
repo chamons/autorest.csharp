@@ -136,6 +136,7 @@ namespace AutoRest.CSharp.Generation.Writers
 
         private string CreateMethodName(string name, bool async) => $"{name}{(async ? "Async" : string.Empty)}";
 
+        // TODO - Should be Endpoint with capital
         private const string EndpointProperty = "endpoint";
         private const string EndpointParameter = "endpoint";
         private const string PipelineVariable = "pipeline";
@@ -218,7 +219,6 @@ namespace AutoRest.CSharp.Generation.Writers
                 {
                     writer.Line($"throw new {typeof(ArgumentNullException)}(nameof({KeyCredentialVariable}));");
                 }
-                // HACK - Should be named so not this.
                 writer.Line($"this.{EndpointProperty} = {EndpointParameter};");
                 writer.Line($"{PipelineField} =  {typeof(HttpPipelineBuilder)}.Build({ProtocolOptions}, new {typeof(AzureKeyCredentialPolicy)}({KeyCredentialVariable}, AuthorizationHeader));");
             }

@@ -36,6 +36,7 @@ namespace AutoRest.CSharp.Generation.Writers
             var visibility = lowLevel ? "public" : "internal";
             writer.Append($"{visibility} {returnType} {methodName}(");
             var parameters = clientMethod.Parameters;
+            // Skip the first model parameter on low level client
             foreach (Parameter clientParameter in parameters.Skip(lowLevel ? 1 : 0))
             {
                 if (lowLevel)
