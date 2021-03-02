@@ -308,7 +308,7 @@ namespace AutoRest.CSharp.Generation.Writers
             writer.Line($", {segment.Escape:L});");
         }
 
-                private void WriteConstantOrParameterAsString(CodeWriter writer, ReferenceOrConstant constantOrReference)
+        private static void WriteConstantOrParameterAsString(CodeWriter writer, ReferenceOrConstant constantOrReference)
         {
             WriteConstantOrParameter(writer, constantOrReference, enumAsString: true);
             if (constantOrReference.Type.IsFrameworkType && constantOrReference.Type.FrameworkType != typeof(string))
