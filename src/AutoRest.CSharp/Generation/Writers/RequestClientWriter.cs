@@ -9,6 +9,7 @@ using System.Linq;
 using AutoRest.CSharp.AutoRest.Plugins;
 using AutoRest.CSharp.Generation.Types;
 using AutoRest.CSharp.Output.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using AutoRest.CSharp.Output.Models.Requests;
 using AutoRest.CSharp.Output.Models.Shared;
 using AutoRest.CSharp.Output.Models.Serialization;
@@ -66,6 +67,10 @@ namespace AutoRest.CSharp.Generation.Writers
                     writer.Line($"var {request:D} = {message}.Request;");
                 }
                 var method = clientMethod.Request.HttpMethod;
+                if (!clientMethod.BufferResponse)
+                {
+                    writer.Line($"{message}.BufferResponse = false;");
+                }
                 writer.Line($"{request}.Method = {typeof(RequestMethod)}.{method.ToRequestMethodName()};");
 
                 writer.Line($"var {uri:D} = new RawRequestUriBuilder();");
@@ -190,6 +195,23 @@ namespace AutoRest.CSharp.Generation.Writers
                                 flattenedSchemaRequestBody.Serialization,
                                 w => w.Append(modelVariable));
                             break;
+                        case UrlEncodedBody urlEncodedRequestBody:
+                            var urlContent = new CodeWriterDeclaration("content");
+
+                            WriteHeaders(writer, clientMethod, request, content: true);
+                            writer.Line($"var {urlContent:D} = new {typeof(FormUrlEncodedContent)}();");
+
+                            foreach (var (name, value) in urlEncodedRequestBody.Values)
+                            {
+                                using (WriteValueNullCheck(writer, value))
+                                {
+                                    writer.Append($"{urlContent}.Add({name:L},");
+                                    WriteConstantOrParameterAsString(writer, value);
+                                    writer.Line($");");
+                                }
+                            }
+                            writer.Line($"{request}.Content = {urlContent};");
+                            break;
                         case null:
                             break;
                         default:
@@ -284,6 +306,15 @@ namespace AutoRest.CSharp.Generation.Writers
             WriteConstantOrParameter(writer, segment.Value, enumAsString: !segment.IsRaw);
             WriteSerializationFormat(writer, segment.Format);
             writer.Line($", {segment.Escape:L});");
+        }
+
+                private void WriteConstantOrParameterAsString(CodeWriter writer, ReferenceOrConstant constantOrReference)
+        {
+            WriteConstantOrParameter(writer, constantOrReference, enumAsString: true);
+            if (constantOrReference.Type.IsFrameworkType && constantOrReference.Type.FrameworkType != typeof(string))
+            {
+                writer.Append($".ToString()");
+            }
         }
 
         private static void WriteConstantOrParameter(CodeWriter writer, ReferenceOrConstant constantOrReference, bool ignoreNullability = false, bool enumAsString = false)

@@ -4,10 +4,10 @@
 using System;
 using System.Threading;
 using System.Linq;
-using AutoRest.CSharp.AutoRest.Plugins;
 using AutoRest.CSharp.Generation.Types;
 using AutoRest.CSharp.Output.Models;
 using AutoRest.CSharp.Output.Models.Shared;
+using AutoRest.CSharp.Output.Models.Types;
 using Azure.Core;
 using Azure.Core.Pipeline;
 
@@ -15,7 +15,7 @@ namespace AutoRest.CSharp.Generation.Writers
 {
     internal class LowLevelClientWriter
     {
-        public void WriteClient(CodeWriter writer, Client client, Configuration configuration)
+        public void WriteClient(CodeWriter writer, Client client, BuildContext context)
         {
             var cs = client.Type;
             using (writer.Namespace(cs.Namespace + ".Protocol"))

@@ -20,7 +20,11 @@ namespace CognitiveServices.TextAnalytics.Protocol
     {
         public virtual string endpoint { get; }
         private readonly HttpPipeline _pipeline;
+<<<<<<< HEAD
         private const string AuthorizationHeader = "Ocp-Apim-Subscription-Key";
+=======
+        internal CognitiveServicesTextAnalyticsRestClient RestClient { get; }
+>>>>>>> feature/v3
 
         /// <summary> Initializes a new instance of CognitiveServicesTextAnalyticsClient for mocking. </summary>
         protected CognitiveServicesTextAnalyticsClient()

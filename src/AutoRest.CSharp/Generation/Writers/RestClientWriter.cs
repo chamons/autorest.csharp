@@ -19,6 +19,7 @@ using AutoRest.CSharp.Utilities;
 using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Response = Azure.Response;
 
 namespace AutoRest.CSharp.Generation.Writers
