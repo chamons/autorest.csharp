@@ -15,21 +15,28 @@ namespace CognitiveServices.TextAnalytics.Models
     {
         internal static SentenceSentiment DeserializeSentenceSentiment(JsonElement element)
         {
+            string text = default;
             SentenceSentimentValue sentiment = default;
-            SentimentConfidenceScorePerLabel sentenceScores = default;
+            SentimentConfidenceScorePerLabel confidenceScores = default;
             int offset = default;
             int length = default;
-            Optional<IReadOnlyList<string>> warnings = default;
+            Optional<IReadOnlyList<SentenceAspect>> aspects = default;
+            Optional<IReadOnlyList<SentenceOpinion>> opinions = default;
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("text"))
+                {
+                    text = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("sentiment"))
                 {
                     sentiment = property.Value.GetString().ToSentenceSentimentValue();
                     continue;
                 }
-                if (property.NameEquals("sentenceScores"))
+                if (property.NameEquals("confidenceScores"))
                 {
-                    sentenceScores = SentimentConfidenceScorePerLabel.DeserializeSentimentConfidenceScorePerLabel(property.Value);
+                    confidenceScores = SentimentConfidenceScorePerLabel.DeserializeSentimentConfidenceScorePerLabel(property.Value);
                     continue;
                 }
                 if (property.NameEquals("offset"))
@@ -42,23 +49,38 @@ namespace CognitiveServices.TextAnalytics.Models
                     length = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("warnings"))
+                if (property.NameEquals("aspects"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
-                    List<string> array = new List<string>();
+                    List<SentenceAspect> array = new List<SentenceAspect>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        array.Add(SentenceAspect.DeserializeSentenceAspect(item));
                     }
-                    warnings = array;
+                    aspects = array;
+                    continue;
+                }
+                if (property.NameEquals("opinions"))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    List<SentenceOpinion> array = new List<SentenceOpinion>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(SentenceOpinion.DeserializeSentenceOpinion(item));
+                    }
+                    opinions = array;
                     continue;
                 }
             }
-            return new SentenceSentiment(sentiment, sentenceScores, offset, length, Optional.ToList(warnings));
+            return new SentenceSentiment(text, sentiment, confidenceScores, offset, length, Optional.ToList(aspects), Optional.ToList(opinions));
         }
     }
 }
