@@ -9,17 +9,18 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
+using Azure.Core;
 using Azure.Core.Pipeline;
 using CognitiveServices.TextAnalytics.Models;
 
-namespace CognitiveServices.TextAnalytics
+namespace CognitiveServices.TextAnalytics.Protocol
 {
     /// <summary> The CognitiveServicesTextAnalytics service client. </summary>
     public partial class CognitiveServicesTextAnalyticsClient
     {
-        private readonly ClientDiagnostics _clientDiagnostics;
+        public virtual string endpoint { get; }
         private readonly HttpPipeline _pipeline;
-        internal CognitiveServicesTextAnalyticsRestClient RestClient { get; }
+        private const string AuthorizationHeader = "Ocp-Apim-Subscription-Key";
 
         /// <summary> Initializes a new instance of CognitiveServicesTextAnalyticsClient for mocking. </summary>
         protected CognitiveServicesTextAnalyticsClient()
@@ -27,272 +28,518 @@ namespace CognitiveServices.TextAnalytics
         }
 
         /// <summary> Initializes a new instance of CognitiveServicesTextAnalyticsClient. </summary>
-        /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
-        /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> Supported Cognitive Services endpoints (protocol and hostname, for example: https://westus.api.cognitive.microsoft.com). </param>
-        internal CognitiveServicesTextAnalyticsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string endpoint)
+        /// <param name="credential"> The credentials to use. </param>
+        public CognitiveServicesTextAnalyticsClient(string endpoint, AzureKeyCredential credential) : this(endpoint, credential, new ProtocolClientOptions())
         {
-            RestClient = new CognitiveServicesTextAnalyticsRestClient(clientDiagnostics, pipeline, endpoint);
-            _clientDiagnostics = clientDiagnostics;
-            _pipeline = pipeline;
+        }
+
+        /// <summary> Initializes a new instance of CognitiveServicesTextAnalyticsClient. </summary>
+        /// <param name="endpoint"> Supported Cognitive Services endpoints (protocol and hostname, for example: https://westus.api.cognitive.microsoft.com). </param>
+        /// <param name="credential"> The credentials to use. </param>
+        /// <param name="options"> Options to control the underlying operations. </param>
+        internal CognitiveServicesTextAnalyticsClient(string endpoint, AzureKeyCredential credential, ProtocolClientOptions options)
+        {
+            if (endpoint == null)
+            {
+                throw new ArgumentNullException(nameof(endpoint));
+            }
+
+            if (credential == null)
+            {
+                throw new ArgumentNullException(nameof(credential));
+            }
+            this.endpoint = endpoint;
+            _pipeline = HttpPipelineBuilder.Build(options, new AzureKeyCredentialPolicy(credential, AuthorizationHeader));
         }
 
         /// <summary> The API returns a list of general named entities in a given document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/taner&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<EntitiesResult>> EntitiesRecognitionGeneralAsync(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesRecognitionGeneralAsync(JsonData body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesRecognitionGeneral");
-            scope.Start();
-            try
-            {
-                return await RestClient.EntitiesRecognitionGeneralAsync(input, modelVersion, showStats, stringIndexType, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateEntitiesRecognitionGeneralRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary> The API returns a list of general named entities in a given document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/taner&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<EntitiesResult> EntitiesRecognitionGeneral(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesRecognitionGeneralAsync(dynamic body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesRecognitionGeneral");
-            scope.Start();
-            try
+            DynamicRequest req = CreateEntitiesRecognitionGeneralRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary> The API returns a list of general named entities in a given document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/taner&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesRecognitionGeneral(JsonData body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesRecognitionGeneralRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary> The API returns a list of general named entities in a given document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/taner&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesRecognitionGeneral(dynamic body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesRecognitionGeneralRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateEntitiesRecognitionGeneralRequest(string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/entities/recognition/general", false);
+            if (modelVersion != null)
             {
-                return RestClient.EntitiesRecognitionGeneral(input, modelVersion, showStats, stringIndexType, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            if (stringIndexType != null)
+            {
+                uri.AppendQuery("stringIndexType", stringIndexType.Value.ToString(), true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
         }
 
         /// <summary>
         /// The API returns a list of entities with personal information (\&quot;SSN\&quot;, \&quot;Bank Account\&quot; etc) in the document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/tanerpii&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages.
         /// .
         /// </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="domain"> (Optional) if set to &apos;PHI&apos;, response will contain only PHI entities. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<EntitiesResult>> EntitiesRecognitionPiiAsync(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesRecognitionPiiAsync(JsonData body, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesRecognitionPii");
-            scope.Start();
-            try
-            {
-                return await RestClient.EntitiesRecognitionPiiAsync(input, modelVersion, showStats, domain, stringIndexType, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateEntitiesRecognitionPiiRequest(modelVersion, showStats, domain, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// The API returns a list of entities with personal information (\&quot;SSN\&quot;, \&quot;Bank Account\&quot; etc) in the document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/tanerpii&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages.
         /// .
         /// </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="domain"> (Optional) if set to &apos;PHI&apos;, response will contain only PHI entities. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<EntitiesResult> EntitiesRecognitionPii(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesRecognitionPiiAsync(dynamic body, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesRecognitionPii");
-            scope.Start();
-            try
+            DynamicRequest req = CreateEntitiesRecognitionPiiRequest(modelVersion, showStats, domain, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// The API returns a list of entities with personal information (\&quot;SSN\&quot;, \&quot;Bank Account\&quot; etc) in the document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/tanerpii&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages.
+        /// .
+        /// </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="domain"> (Optional) if set to &apos;PHI&apos;, response will contain only PHI entities. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesRecognitionPii(JsonData body, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesRecognitionPiiRequest(modelVersion, showStats, domain, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary>
+        /// The API returns a list of entities with personal information (\&quot;SSN\&quot;, \&quot;Bank Account\&quot; etc) in the document. For the list of supported entity types, check &lt;a href=&quot;https://aka.ms/tanerpii&quot;&gt;Supported Entity Types in Text Analytics API&lt;/a&gt;. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages.
+        /// .
+        /// </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="domain"> (Optional) if set to &apos;PHI&apos;, response will contain only PHI entities. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesRecognitionPii(dynamic body, string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesRecognitionPiiRequest(modelVersion, showStats, domain, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateEntitiesRecognitionPiiRequest(string modelVersion = null, bool? showStats = null, string domain = null, StringIndexType? stringIndexType = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/entities/recognition/pii", false);
+            if (modelVersion != null)
             {
-                return RestClient.EntitiesRecognitionPii(input, modelVersion, showStats, domain, stringIndexType, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            if (domain != null)
+            {
+                uri.AppendQuery("domain", domain, true);
+            }
+            if (stringIndexType != null)
+            {
+                uri.AppendQuery("stringIndexType", stringIndexType.Value.ToString(), true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
         }
 
         /// <summary> The API returns a list of recognized entities with links to a well-known knowledge base. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<EntityLinkingResult>> EntitiesLinkingAsync(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesLinkingAsync(JsonData body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesLinking");
-            scope.Start();
-            try
-            {
-                return await RestClient.EntitiesLinkingAsync(input, modelVersion, showStats, stringIndexType, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateEntitiesLinkingRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary> The API returns a list of recognized entities with links to a well-known knowledge base. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<EntityLinkingResult> EntitiesLinking(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> EntitiesLinkingAsync(dynamic body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.EntitiesLinking");
-            scope.Start();
-            try
+            DynamicRequest req = CreateEntitiesLinkingRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary> The API returns a list of recognized entities with links to a well-known knowledge base. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesLinking(JsonData body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesLinkingRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary> The API returns a list of recognized entities with links to a well-known knowledge base. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse EntitiesLinking(dynamic body, string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateEntitiesLinkingRequest(modelVersion, showStats, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateEntitiesLinkingRequest(string modelVersion = null, bool? showStats = null, StringIndexType? stringIndexType = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/entities/linking", false);
+            if (modelVersion != null)
             {
-                return RestClient.EntitiesLinking(input, modelVersion, showStats, stringIndexType, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            if (stringIndexType != null)
+            {
+                uri.AppendQuery("stringIndexType", stringIndexType.Value.ToString(), true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
         }
 
         /// <summary> The API returns a list of strings denoting the key phrases in the input text. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<KeyPhraseResult>> KeyPhrasesAsync(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> KeyPhrasesAsync(JsonData body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.KeyPhrases");
-            scope.Start();
-            try
-            {
-                return await RestClient.KeyPhrasesAsync(input, modelVersion, showStats, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateKeyPhrasesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary> The API returns a list of strings denoting the key phrases in the input text. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<KeyPhraseResult> KeyPhrases(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> KeyPhrasesAsync(dynamic body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.KeyPhrases");
-            scope.Start();
-            try
+            DynamicRequest req = CreateKeyPhrasesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary> The API returns a list of strings denoting the key phrases in the input text. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse KeyPhrases(JsonData body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateKeyPhrasesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary> The API returns a list of strings denoting the key phrases in the input text. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse KeyPhrases(dynamic body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateKeyPhrasesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateKeyPhrasesRequest(string modelVersion = null, bool? showStats = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/keyPhrases", false);
+            if (modelVersion != null)
             {
-                return RestClient.KeyPhrases(input, modelVersion, showStats, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
         }
 
         /// <summary> The API returns the detected language and a numeric score between 0 and 1. Scores close to 1 indicate 100% certainty that the identified language is true. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze for language endpoint. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<LanguageResult>> LanguagesAsync(LanguageBatchInput input, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> LanguagesAsync(JsonData body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.Languages");
-            scope.Start();
-            try
-            {
-                return await RestClient.LanguagesAsync(input, modelVersion, showStats, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateLanguagesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary> The API returns the detected language and a numeric score between 0 and 1. Scores close to 1 indicate 100% certainty that the identified language is true. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
-        /// <param name="input"> Collection of documents to analyze for language endpoint. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<LanguageResult> Languages(LanguageBatchInput input, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> LanguagesAsync(dynamic body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.Languages");
-            scope.Start();
-            try
+            DynamicRequest req = CreateLanguagesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary> The API returns the detected language and a numeric score between 0 and 1. Scores close to 1 indicate 100% certainty that the identified language is true. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse Languages(JsonData body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateLanguagesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary> The API returns the detected language and a numeric score between 0 and 1. Scores close to 1 indicate 100% certainty that the identified language is true. See the &lt;a href=&quot;https://aka.ms/talangs&quot;&gt;Supported languages in Text Analytics API&lt;/a&gt; for the list of enabled languages. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse Languages(dynamic body, string modelVersion = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateLanguagesRequest(modelVersion, showStats);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateLanguagesRequest(string modelVersion = null, bool? showStats = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/languages", false);
+            if (modelVersion != null)
             {
-                return RestClient.Languages(input, modelVersion, showStats, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
         }
 
         /// <summary> The API returns a detailed sentiment analysis for the input text. The analysis is done in multiple levels of granularity, start from the a document level, down to sentence and key terms (aspects) and opinions. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="opinionMining"> (Optional) if set to true, response will contain input and document level statistics including aspect-based sentiment analysis results. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<SentimentResponse>> SentimentAsync(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> SentimentAsync(JsonData body, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.Sentiment");
-            scope.Start();
-            try
-            {
-                return await RestClient.SentimentAsync(input, modelVersion, showStats, opinionMining, stringIndexType, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            DynamicRequest req = CreateSentimentRequest(modelVersion, showStats, opinionMining, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary> The API returns a detailed sentiment analysis for the input text. The analysis is done in multiple levels of granularity, start from the a document level, down to sentence and key terms (aspects) and opinions. </summary>
-        /// <param name="input"> Collection of documents to analyze. </param>
+        /// <param name="body"> The request body. </param>
         /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="opinionMining"> (Optional) if set to true, response will contain input and document level statistics including aspect-based sentiment analysis results. </param>
         /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<SentimentResponse> Sentiment(MultiLanguageBatchInput input, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        public virtual async Task<DynamicResponse> SentimentAsync(dynamic body, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("CognitiveServicesTextAnalyticsClient.Sentiment");
-            scope.Start();
-            try
+            DynamicRequest req = CreateSentimentRequest(modelVersion, showStats, opinionMining, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return await req.SendAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary> The API returns a detailed sentiment analysis for the input text. The analysis is done in multiple levels of granularity, start from the a document level, down to sentence and key terms (aspects) and opinions. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="opinionMining"> (Optional) if set to true, response will contain input and document level statistics including aspect-based sentiment analysis results. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse Sentiment(JsonData body, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateSentimentRequest(modelVersion, showStats, opinionMining, stringIndexType);
+            req.Content = DynamicContent.Create(body);
+            return req.Send(cancellationToken);
+        }
+
+        /// <summary> The API returns a detailed sentiment analysis for the input text. The analysis is done in multiple levels of granularity, start from the a document level, down to sentence and key terms (aspects) and opinions. </summary>
+        /// <param name="body"> The request body. </param>
+        /// <param name="modelVersion"> (Optional) This value indicates which model will be used for scoring. If a model-version is not specified, the API should default to the latest, non-preview version. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="opinionMining"> (Optional) if set to true, response will contain input and document level statistics including aspect-based sentiment analysis results. </param>
+        /// <param name="stringIndexType"> (Optional) Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual DynamicResponse Sentiment(dynamic body, string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null, CancellationToken cancellationToken = default)
+        {
+            DynamicRequest req = CreateSentimentRequest(modelVersion, showStats, opinionMining, stringIndexType);
+            req.Content = DynamicContent.Create(ToJsonData(body));
+            return req.Send(cancellationToken);
+        }
+
+        public DynamicRequest CreateSentimentRequest(string modelVersion = null, bool? showStats = null, bool? opinionMining = null, StringIndexType? stringIndexType = null)
+        {
+            var request = _pipeline.CreateRequest();
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.1", false);
+            uri.AppendPath("/sentiment", false);
+            if (modelVersion != null)
             {
-                return RestClient.Sentiment(input, modelVersion, showStats, opinionMining, stringIndexType, cancellationToken);
+                uri.AppendQuery("model-version", modelVersion, true);
             }
-            catch (Exception e)
+            if (showStats != null)
             {
-                scope.Failed(e);
-                throw;
+                uri.AppendQuery("showStats", showStats.Value, true);
             }
+            if (opinionMining != null)
+            {
+                uri.AppendQuery("opinionMining", opinionMining.Value, true);
+            }
+            if (stringIndexType != null)
+            {
+                uri.AppendQuery("stringIndexType", stringIndexType.Value.ToString(), true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Content-Type", "application/json");
+            return new DynamicRequest(request, _pipeline);
+        }
+
+        private static JsonData ToJsonData(object value)
+        {
+            if (value is JsonData)
+            {
+                return (JsonData)value;
+            }
+            return new JsonData(value);
         }
     }
 }
