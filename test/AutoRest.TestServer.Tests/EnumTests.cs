@@ -10,5 +10,10 @@ namespace AutoRest.TestServer.Tests
 {
     public class EnumTests
     {
+        public static void Foo()
+        {
+            var v = new Enums.EnumsClient();
+            v.Operation ()
+        }
     }
 }

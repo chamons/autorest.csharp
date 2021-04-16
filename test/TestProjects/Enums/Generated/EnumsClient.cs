@@ -54,7 +54,11 @@ namespace Enums
             }
         }
 
-        /// <param name="body"> The MyType to use. </param>
+        /// <param name="body"> 
+        /// The MyType to use. 
+        /// &apos;value1&apos;: Description about value1
+        /// &apos;value2&apos;: Descripiton about value2.
+        /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response Operation(MyType? body = null, CancellationToken cancellationToken = default)
         {
