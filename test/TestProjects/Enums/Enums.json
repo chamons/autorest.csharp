@@ -1,0 +1,49 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Enums",
+    "description": "Enums",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/Operation/": {
+      "put": {
+        "operationId": "Operation",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/MyType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Received correct format"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "MyType": {
+      "description": "My own description about the values.\r\n'value1': Description about value1\r\n'value2': Descripiton about value2",
+      "enum": [
+        "value1",
+        "value2"
+      ],
+      "type": "string"
+    }
+  }
+}
