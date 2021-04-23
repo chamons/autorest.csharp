@@ -227,6 +227,17 @@ namespace AutoRest.CSharp.Generation.Types
         public bool TryCreateType(ITypeSymbol symbol, [NotNullWhen(true)] out CSharpType? type)
         {
             type = null;
+
+            // HACK: Special case byte [] as we don't handle arrays well here
+            if (symbol is IArrayTypeSymbol arrayTypeSymbol)
+            {
+                if (arrayTypeSymbol.ElementType.SpecialType == SpecialType.System_Byte)
+                {
+                    type = new CSharpType(typeof(Array), new[] { new CSharpType (typeof(byte)) });
+                    return true;
+                }
+            }
+
             INamedTypeSymbol? namedTypeSymbol = symbol as INamedTypeSymbol;
             if (namedTypeSymbol == null)
             {
