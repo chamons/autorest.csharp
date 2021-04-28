@@ -86,17 +86,50 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.Append($");");
                 writer.Line();
 
+                var responseVariable = new CodeWriterDeclaration("response");
+                writer.Append($"{typeof(Azure.Response)} {responseVariable:D} = ");
+
                 if (async)
                 {
-                    writer.Line($"return await {PipelineField:I}.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);");
+                    writer.Line($"await {PipelineField:I}.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);");
                 }
                 else
                 {
-                    writer.Line($"return {PipelineField:I}.SendRequest(req, cancellationToken);");
+                    writer.Line($"{PipelineField:I}.SendRequest(req, cancellationToken);");
                 }
+
+                WriteStatusCodeSwitch(writer, responseVariable, clientMethod, async);
             }
 
             writer.Line();
+        }
+
+        private void WriteStatusCodeSwitch(CodeWriter writer, CodeWriterDeclaration responseVariable, RestClientMethod clientMethod, bool async)
+        {
+             using (writer.Scope($"switch ({responseVariable}.Status)"))
+            {
+                foreach (var response in clientMethod.Responses)
+                {
+                    var responseBody = response.ResponseBody;
+                    var statusCodes = response.StatusCodes;
+
+                    foreach (var statusCode in statusCodes)
+                    {
+                        if (statusCode.Code != null)
+                        {
+                           writer.Line($"case {statusCode.Code}:");
+                        }
+                        else
+                        {
+                            writer.Line($"case int s when s >= {statusCode.Family * 100:L} && s < {statusCode.Family * 100 + 100:L}:");
+                        }
+                    }
+                }
+                writer.Line($"return {responseVariable:I};");
+
+                writer.Line($"default:");
+                writer.Line($"throw new {typeof(RequestFailedException)}({responseVariable}.Status, \"Service request failed\");");
+            }
         }
 
         private string CreateMethodName(string name, bool async) => $"{name}{(async ? "Async" : string.Empty)}";

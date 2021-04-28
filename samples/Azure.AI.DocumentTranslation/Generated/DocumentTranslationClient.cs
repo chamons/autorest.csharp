@@ -75,7 +75,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> StartTranslationAsync(RequestContent requestBody, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateStartTranslationRequest(requestBody, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 202:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -103,7 +110,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response StartTranslation(RequestContent requestBody, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateStartTranslationRequest(requestBody, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 202:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="StartTranslation"/> and <see cref="StartTranslationAsync"/> operations. </summary>
@@ -215,7 +229,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetTranslationsStatusAsync(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -308,7 +329,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetTranslationsStatus(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetTranslationsStatus"/> and <see cref="GetTranslationsStatusAsync"/> operations. </summary>
@@ -405,7 +433,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetDocumentStatusAsync(Guid id, Guid documentId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Returns the translation status for a specific document based on the request Id and document Id. </summary>
@@ -416,7 +451,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetDocumentStatus(Guid id, Guid documentId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetDocumentStatus"/> and <see cref="GetDocumentStatusAsync"/> operations. </summary>
@@ -451,7 +493,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetTranslationStatusAsync(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetTranslationStatusRequest(id, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -465,7 +514,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetTranslationStatus(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetTranslationStatusRequest(id, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetTranslationStatus"/> and <see cref="GetTranslationStatusAsync"/> operations. </summary>
@@ -503,7 +559,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> CancelTranslationAsync(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateCancelTranslationRequest(id, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -523,7 +586,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response CancelTranslation(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateCancelTranslationRequest(id, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="CancelTranslation"/> and <see cref="CancelTranslationAsync"/> operations. </summary>
@@ -629,7 +699,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetDocumentsStatusAsync(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -717,7 +794,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetDocumentsStatus(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetDocumentsStatus"/> and <see cref="GetDocumentsStatusAsync"/> operations. </summary>
@@ -819,7 +903,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetSupportedDocumentFormatsAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedDocumentFormatsRequest(requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -832,7 +923,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetSupportedDocumentFormats(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedDocumentFormatsRequest(requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetSupportedDocumentFormats"/> and <see cref="GetSupportedDocumentFormatsAsync"/> operations. </summary>
@@ -861,7 +959,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetSupportedGlossaryFormatsAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary>
@@ -874,7 +979,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetSupportedGlossaryFormats(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetSupportedGlossaryFormats"/> and <see cref="GetSupportedGlossaryFormatsAsync"/> operations. </summary>
@@ -899,7 +1011,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> GetSupportedStorageSourcesAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedStorageSourcesRequest(requestOptions);
-            return await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Returns a list of storage sources/options supported by the Document Translation service. </summary>
@@ -908,7 +1027,14 @@ namespace Azure.AI.DocumentTranslation
         public virtual Response GetSupportedStorageSources(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateGetSupportedStorageSourcesRequest(requestOptions);
-            return Pipeline.SendRequest(req, cancellationToken);
+            Response response = Pipeline.SendRequest(req, cancellationToken);
+            switch (response.Status)
+            {
+                case 200:
+                    return response;
+                default:
+                    throw new RequestFailedException(response.Status, "Service request failed");
+            }
         }
 
         /// <summary> Create Request for <see cref="GetSupportedStorageSources"/> and <see cref="GetSupportedStorageSourcesAsync"/> operations. </summary>
