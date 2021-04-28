@@ -23,6 +23,7 @@ namespace Azure.AI.DocumentTranslation
         private const string AuthorizationHeader = "Ocp-Apim-Subscription-Key";
         private string endpoint;
         private readonly string apiVersion;
+        private readonly ClientDiagnostics _clientDiagnostics;
 
         /// <summary> Initializes a new instance of DocumentTranslationClient for mocking. </summary>
         protected DocumentTranslationClient()
@@ -45,6 +46,7 @@ namespace Azure.AI.DocumentTranslation
             }
 
             options ??= new AzureAIDocumentTranslationClientOptions();
+            _clientDiagnostics = new ClientDiagnostics(options);
             Pipeline = HttpPipelineBuilder.Build(options, new AzureKeyCredentialPolicy(credential, AuthorizationHeader));
             this.endpoint = endpoint;
             apiVersion = options.Version;
@@ -81,7 +83,7 @@ namespace Azure.AI.DocumentTranslation
                 case 202:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -116,7 +118,7 @@ namespace Azure.AI.DocumentTranslation
                 case 202:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -235,7 +237,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -335,7 +337,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -439,7 +441,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -457,7 +459,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -499,7 +501,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -520,7 +522,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -565,7 +567,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -592,7 +594,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -705,7 +707,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -800,7 +802,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -909,7 +911,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -929,7 +931,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -965,7 +967,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -985,7 +987,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 
@@ -1017,7 +1019,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
             }
         }
 
@@ -1033,7 +1035,7 @@ namespace Azure.AI.DocumentTranslation
                 case 200:
                     return response;
                 default:
-                    throw new RequestFailedException(response.Status, "Service request failed");
+                    throw _clientDiagnostics.CreateRequestFailedException(response);
             }
         }
 

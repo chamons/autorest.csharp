@@ -128,7 +128,14 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.Line($"return {responseVariable:I};");
 
                 writer.Line($"default:");
-                writer.Line($"throw new {typeof(RequestFailedException)}({responseVariable}.Status, \"Service request failed\");");
+                if (async)
+                {
+                    writer.Line($"throw await {ClientDiagnosticsField}.CreateRequestFailedExceptionAsync({responseVariable}).ConfigureAwait(false);");
+                }
+                else
+                {
+                    writer.Line($"throw {ClientDiagnosticsField}.CreateRequestFailedException({responseVariable});");
+                }
             }
         }
 
@@ -140,6 +147,8 @@ namespace AutoRest.CSharp.Generation.Writers
         private const string APIVersionField = "apiVersion";
         private const string AuthorizationHeaderConstant = "AuthorizationHeader";
         private const string ScopesConstant = "AuthorizationScopes";
+        private const string ClientDiagnosticsVariable = "clientDiagnostics";
+        private const string ClientDiagnosticsField = "_" + ClientDiagnosticsVariable;
 
         private bool HasKeyAuth (BuildContext context) => context.Configuration.CredentialTypes.Contains("AzureKeyCredential", StringComparer.OrdinalIgnoreCase);
         private bool HasTokenAuth (BuildContext context) => context.Configuration.CredentialTypes.Contains("TokenCredential", StringComparer.OrdinalIgnoreCase);
@@ -172,6 +181,7 @@ namespace AutoRest.CSharp.Generation.Writers
             }
 
             writer.Line($"private readonly string {APIVersionField};");
+            writer.Line($"private readonly {typeof(ClientDiagnostics)} {ClientDiagnosticsField};");
 
             writer.Line();
         }
@@ -231,6 +241,7 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.Line();
 
                 writer.Line($"{OptionsVariable} ??= new {clientOptionsName}ClientOptions();");
+                writer.Line($"{ClientDiagnosticsField} = new {typeof(ClientDiagnostics)}({OptionsVariable});");
 
                 if (keyCredential)
                 {
