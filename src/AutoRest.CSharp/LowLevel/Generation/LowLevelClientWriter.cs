@@ -22,9 +22,6 @@ namespace AutoRest.CSharp.Generation.Writers
         public void WriteClient(CodeWriter writer, LowLevelRestClient client, BuildContext context)
         {
             var cs = client.Type;
-            // Client type should have public constructor with equivalent parameters not taking ClientOptions type as last argument
-            writer.Line ($"#pragma warning disable AZC0007\n");
-
             using (writer.Namespace(cs.Namespace))
             {
                 writer.WriteXmlDocumentationSummary(client.Description);
