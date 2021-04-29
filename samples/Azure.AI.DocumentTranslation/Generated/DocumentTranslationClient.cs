@@ -78,12 +78,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateStartTranslationRequest(requestBody, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 202:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 202:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -113,12 +121,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateStartTranslationRequest(requestBody, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 202:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 202:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -232,12 +248,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -332,12 +356,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -436,12 +468,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -454,12 +494,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -496,12 +544,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetTranslationStatusRequest(id, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -517,12 +573,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetTranslationStatusRequest(id, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -562,12 +626,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateCancelTranslationRequest(id, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -589,12 +661,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateCancelTranslationRequest(id, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -702,12 +782,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -797,12 +885,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -906,12 +1002,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -926,12 +1030,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -962,12 +1074,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -982,12 +1102,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -1014,12 +1142,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedStorageSourcesRequest(requestOptions);
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(response).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 
@@ -1030,12 +1166,20 @@ namespace Azure.AI.DocumentTranslation
         {
             Request req = CreateGetSupportedStorageSourcesRequest(requestOptions);
             Response response = Pipeline.SendRequest(req, cancellationToken);
-            switch (response.Status)
+            ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
+            if (statusOption == ResponseStatusOption.Default)
             {
-                case 200:
-                    return response;
-                default:
-                    throw _clientDiagnostics.CreateRequestFailedException(response);
+                switch (response.Status)
+                {
+                    case 200:
+                        return response;
+                    default:
+                        throw _clientDiagnostics.CreateRequestFailedException(response);
+                }
+            }
+            else
+            {
+                return response;
             }
         }
 

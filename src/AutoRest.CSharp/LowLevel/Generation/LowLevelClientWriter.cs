@@ -98,7 +98,15 @@ namespace AutoRest.CSharp.Generation.Writers
                     writer.Line($"{PipelineField:I}.SendRequest(req, cancellationToken);");
                 }
 
-                WriteStatusCodeSwitch(writer, responseVariable, clientMethod, async);
+                writer.Line($"ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;");
+                using (writer.Scope($"if (statusOption == ResponseStatusOption.Default)"))
+                {
+                    WriteStatusCodeSwitch(writer, responseVariable, clientMethod, async);
+                }
+                using (writer.Scope($"else"))
+                {
+                    writer.Line($"return {responseVariable:I};");
+                }
             }
 
             writer.Line();
