@@ -47,7 +47,8 @@ namespace Azure.AI.DocumentTranslation
 
             options ??= new AzureAIDocumentTranslationClientOptions();
             _clientDiagnostics = new ClientDiagnostics(options);
-            Pipeline = HttpPipelineBuilder.Build(options, new AzureKeyCredentialPolicy(credential, AuthorizationHeader));
+            var authPolicy = new AzureKeyCredentialPolicy(credential, AuthorizationHeader);
+            Pipeline = HttpPipelineBuilder.Build(options, new[] { authPolicy });
             this.endpoint = endpoint;
             apiVersion = options.Version;
         }

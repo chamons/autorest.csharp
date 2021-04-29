@@ -251,14 +251,22 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.Line($"{OptionsVariable} ??= new {clientOptionsName}ClientOptions();");
                 writer.Line($"{ClientDiagnosticsField} = new {typeof(ClientDiagnostics)}({OptionsVariable});");
 
+
+                var authPolicy = new CodeWriterDeclaration("authPolicy");
                 if (keyCredential)
                 {
-                    writer.Line($"{PipelineField} = {typeof(HttpPipelineBuilder)}.Build({OptionsVariable}, new {typeof(AzureKeyCredentialPolicy)}({KeyCredentialVariable}, {AuthorizationHeaderConstant}));");
+                    writer.Line($"var {authPolicy:D} = new {typeof(AzureKeyCredentialPolicy)}({KeyCredentialVariable}, {AuthorizationHeaderConstant});");
                 }
                 else
                 {
-                    writer.Line($"{PipelineField} = {typeof(HttpPipelineBuilder)}.Build({OptionsVariable}, new {typeof(BearerTokenAuthenticationPolicy)}({KeyCredentialVariable}, {ScopesConstant}));");
+                    writer.Line($"var {authPolicy:D} = new {typeof(BearerTokenAuthenticationPolicy)}({KeyCredentialVariable}, {ScopesConstant});");
                 }
+                var policies = new CodeWriterDeclaration("policies");
+
+                writer.Append($"{PipelineField} = {typeof(HttpPipelineBuilder)}.Build({OptionsVariable}, new [] ");
+                writer.AppendRaw("{");
+                writer.Append($" {authPolicy:I} ");
+                writer.LineRaw("});");
 
                 foreach (Parameter clientParameter in client.Parameters)
                 {
