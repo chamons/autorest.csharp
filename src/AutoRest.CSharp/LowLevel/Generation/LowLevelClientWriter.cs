@@ -47,6 +47,12 @@ namespace AutoRest.CSharp.Generation.Writers
             {
                 writer.WriteXmlDocumentationParameter(parameter.Name, parameter.Description);
             }
+            /*            
+                if (requestOptions?.PerCallPolicy != null)
+                {
+                    message.SetProperty ("RequestOptionsPerCallPolicyCallback", requestOptions);
+                }
+            */
             RequestWriterHelpers.WriteRequestCreation(writer, clientMethod, lowLevel: true, "private");
         }
 
@@ -263,9 +269,11 @@ namespace AutoRest.CSharp.Generation.Writers
                 }
                 var policies = new CodeWriterDeclaration("policies");
 
-                writer.Append($"{PipelineField} = {typeof(HttpPipelineBuilder)}.Build({OptionsVariable}, new [] ");
+                writer.Append($"{PipelineField} = {typeof(HttpPipelineBuilder)}.Build({OptionsVariable}, new HttpPipelinePolicy[] ");
                 writer.AppendRaw("{");
-                writer.Append($" {authPolicy:I} ");
+                writer.Append($" {authPolicy:I}, ");
+                writer.Append($" new {typeof(LowLevelCallbackPolicy)}() ");
+
                 writer.LineRaw("});");
 
                 foreach (Parameter clientParameter in client.Parameters)

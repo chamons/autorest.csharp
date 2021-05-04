@@ -48,7 +48,7 @@ namespace Azure.AI.DocumentTranslation
             options ??= new AzureAIDocumentTranslationClientOptions();
             _clientDiagnostics = new ClientDiagnostics(options);
             var authPolicy = new AzureKeyCredentialPolicy(credential, AuthorizationHeader);
-            Pipeline = HttpPipelineBuilder.Build(options, new[] { authPolicy });
+            Pipeline = HttpPipelineBuilder.Build(options, new HttpPipelinePolicy[] { authPolicy, new LowLevelCallbackPolicy() });
             this.endpoint = endpoint;
             apiVersion = options.Version;
         }
@@ -78,6 +78,7 @@ namespace Azure.AI.DocumentTranslation
         public virtual async Task<Response> StartTranslationAsync(RequestContent requestBody, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
             Request req = CreateStartTranslationRequest(requestBody, requestOptions);
+            
             Response response = await Pipeline.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -145,6 +146,8 @@ namespace Azure.AI.DocumentTranslation
         private Request CreateStartTranslationRequest(RequestContent requestBody, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
+
+
             var request = message.Request;
             request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
