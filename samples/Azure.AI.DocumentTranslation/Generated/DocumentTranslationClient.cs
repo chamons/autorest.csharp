@@ -77,7 +77,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> StartTranslationAsync(RequestContent requestBody, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateStartTranslationMessage(requestBody, requestOptions);
+            HttpMessage message = CreateStartTranslationRequest(requestBody, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -120,7 +120,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response StartTranslation(RequestContent requestBody, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateStartTranslationMessage(requestBody, requestOptions);
+            HttpMessage message = CreateStartTranslationRequest(requestBody, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -142,7 +142,7 @@ namespace Azure.AI.DocumentTranslation
         /// <summary> Create Request for <see cref="StartTranslation"/> and <see cref="StartTranslationAsync"/> operations. </summary>
         /// <param name="requestBody"> The request body. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateStartTranslationMessage(RequestContent requestBody, RequestOptions requestOptions = null)
+        private HttpMessage CreateStartTranslationRequest(RequestContent requestBody, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -247,7 +247,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetTranslationsStatusAsync(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetTranslationsStatusMessage(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
+            HttpMessage message = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -355,7 +355,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetTranslationsStatus(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetTranslationsStatusMessage(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
+            HttpMessage message = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -414,7 +414,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="createdDateTimeUtcEnd"> the end datetime to get items before. </param>
         /// <param name="orderBy"> the sorting query for the collection (ex: &apos;CreatedDateTimeUtc asc&apos;, &apos;CreatedDateTimeUtc desc&apos;). </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetTranslationsStatusMessage(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null)
+        private HttpMessage CreateGetTranslationsStatusRequest(int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -467,7 +467,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetDocumentStatusAsync(Guid id, Guid documentId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetDocumentStatusMessage(id, documentId, requestOptions);
+            HttpMessage message = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -493,7 +493,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetDocumentStatus(Guid id, Guid documentId, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetDocumentStatusMessage(id, documentId, requestOptions);
+            HttpMessage message = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -516,7 +516,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="id"> Format - uuid.  The batch id. </param>
         /// <param name="documentId"> Format - uuid.  The document id. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetDocumentStatusMessage(Guid id, Guid documentId, RequestOptions requestOptions = null)
+        private HttpMessage CreateGetDocumentStatusRequest(Guid id, Guid documentId, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -543,7 +543,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetTranslationStatusAsync(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetTranslationStatusMessage(id, requestOptions);
+            HttpMessage message = CreateGetTranslationStatusRequest(id, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -572,7 +572,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetTranslationStatus(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetTranslationStatusMessage(id, requestOptions);
+            HttpMessage message = CreateGetTranslationStatusRequest(id, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -594,7 +594,7 @@ namespace Azure.AI.DocumentTranslation
         /// <summary> Create Request for <see cref="GetTranslationStatus"/> and <see cref="GetTranslationStatusAsync"/> operations. </summary>
         /// <param name="id"> Format - uuid.  The operation id. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetTranslationStatusMessage(Guid id, RequestOptions requestOptions = null)
+        private HttpMessage CreateGetTranslationStatusRequest(Guid id, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -625,7 +625,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> CancelTranslationAsync(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateCancelTranslationMessage(id, requestOptions);
+            HttpMessage message = CreateCancelTranslationRequest(id, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -660,7 +660,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response CancelTranslation(Guid id, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateCancelTranslationMessage(id, requestOptions);
+            HttpMessage message = CreateCancelTranslationRequest(id, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -682,7 +682,7 @@ namespace Azure.AI.DocumentTranslation
         /// <summary> Create Request for <see cref="CancelTranslation"/> and <see cref="CancelTranslationAsync"/> operations. </summary>
         /// <param name="id"> Format - uuid.  The operation-id. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateCancelTranslationMessage(Guid id, RequestOptions requestOptions = null)
+        private HttpMessage CreateCancelTranslationRequest(Guid id, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -781,7 +781,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetDocumentsStatusAsync(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetDocumentsStatusMessage(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
+            HttpMessage message = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -884,7 +884,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetDocumentsStatus(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetDocumentsStatusMessage(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
+            HttpMessage message = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -944,7 +944,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="createdDateTimeUtcEnd"> the end datetime to get items before. </param>
         /// <param name="orderBy"> the sorting query for the collection (ex: &apos;CreatedDateTimeUtc asc&apos;, &apos;CreatedDateTimeUtc desc&apos;). </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetDocumentsStatusMessage(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null)
+        private HttpMessage CreateGetDocumentsStatusRequest(Guid id, int? top = null, int? skip = null, int? maxpagesize = null, IEnumerable<Guid> ids = null, IEnumerable<string> statuses = null, DateTimeOffset? createdDateTimeUtcStart = null, DateTimeOffset? createdDateTimeUtcEnd = null, IEnumerable<string> orderBy = null, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -1001,7 +1001,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetSupportedDocumentFormatsAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedDocumentFormatsMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1029,7 +1029,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetSupportedDocumentFormats(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedDocumentFormatsMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1050,7 +1050,7 @@ namespace Azure.AI.DocumentTranslation
 
         /// <summary> Create Request for <see cref="GetSupportedDocumentFormats"/> and <see cref="GetSupportedDocumentFormatsAsync"/> operations. </summary>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetSupportedDocumentFormatsMessage(RequestOptions requestOptions = null)
+        private HttpMessage CreateGetSupportedDocumentFormatsRequest(RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -1073,7 +1073,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetSupportedGlossaryFormatsAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedGlossaryFormatsMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1101,7 +1101,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetSupportedGlossaryFormats(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedGlossaryFormatsMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1122,7 +1122,7 @@ namespace Azure.AI.DocumentTranslation
 
         /// <summary> Create Request for <see cref="GetSupportedGlossaryFormats"/> and <see cref="GetSupportedGlossaryFormatsAsync"/> operations. </summary>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetSupportedGlossaryFormatsMessage(RequestOptions requestOptions = null)
+        private HttpMessage CreateGetSupportedGlossaryFormatsRequest(RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -1141,7 +1141,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response> GetSupportedStorageSourcesAsync(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedStorageSourcesMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedStorageSourcesRequest(requestOptions);
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1165,7 +1165,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response GetSupportedStorageSources(RequestOptions requestOptions = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage message = CreateGetSupportedStorageSourcesMessage(requestOptions);
+            HttpMessage message = CreateGetSupportedStorageSourcesRequest(requestOptions);
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
             if (statusOption == ResponseStatusOption.Default)
@@ -1186,7 +1186,7 @@ namespace Azure.AI.DocumentTranslation
 
         /// <summary> Create Request for <see cref="GetSupportedStorageSources"/> and <see cref="GetSupportedStorageSourcesAsync"/> operations. </summary>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateGetSupportedStorageSourcesMessage(RequestOptions requestOptions = null)
+        private HttpMessage CreateGetSupportedStorageSourcesRequest(RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;

@@ -82,7 +82,7 @@ namespace AutoRest.CSharp.Generation.Writers
 
             using (writer.Scope())
             {
-                writer.Append($"{typeof(Azure.Core.HttpMessage)} message = {RequestWriterHelpers.CreateRequestMethodName(clientMethod.Name, true)}(");
+                writer.Append($"{typeof(Azure.Core.HttpMessage)} message = {RequestWriterHelpers.CreateRequestMethodName(clientMethod.Name)}(");
 
                 foreach (var parameter in clientMethod.Parameters)
                 {

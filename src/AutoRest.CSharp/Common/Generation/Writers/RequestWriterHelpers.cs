@@ -24,7 +24,7 @@ namespace AutoRest.CSharp.Generation.Writers
             using var methodScope = writer.AmbientScope();
             var parameters = clientMethod.Parameters;
 
-            var methodName = CreateRequestMethodName(clientMethod.Name, isMessage: lowLevel);
+            var methodName = CreateRequestMethodName(clientMethod.Name);
             writer.Append($"{methodAccessibility} {typeof(HttpMessage)} {methodName}(");
             foreach (Parameter clientParameter in parameters)
             {
@@ -213,7 +213,7 @@ namespace AutoRest.CSharp.Generation.Writers
             }
         }
 
-        public static string CreateRequestMethodName(string name, bool isMessage = false) => isMessage ? $"Create{name}Message" : $"Create{name}Request";
+        public static string CreateRequestMethodName(string name) => $"Create{name}Request";
 
         private static void WriteSerializeContent(CodeWriter writer, CodeWriterDeclaration request, ObjectSerialization bodySerialization, CodeWriterDelegate valueDelegate)
         {
