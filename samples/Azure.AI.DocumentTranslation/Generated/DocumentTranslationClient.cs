@@ -80,7 +80,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateStartTranslationRequest(requestBody, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -127,7 +127,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateStartTranslationRequest(requestBody, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -258,7 +258,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -370,7 +370,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetTranslationsStatusRequest(top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -486,7 +486,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -516,7 +516,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetDocumentStatusRequest(id, documentId, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -570,7 +570,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetTranslationStatusRequest(id, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -603,7 +603,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetTranslationStatusRequest(id, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -660,7 +660,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateCancelTranslationRequest(id, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -699,7 +699,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateCancelTranslationRequest(id, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -824,7 +824,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -931,7 +931,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetDocumentsStatusRequest(id, top, skip, maxpagesize, ids, statuses, createdDateTimeUtcStart, createdDateTimeUtcEnd, orderBy, requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1052,7 +1052,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1084,7 +1084,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedDocumentFormatsRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1132,7 +1132,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1164,7 +1164,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedGlossaryFormatsRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1208,7 +1208,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedStorageSourcesRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             await Pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
@@ -1236,7 +1236,7 @@ namespace Azure.AI.DocumentTranslation
             HttpMessage message = CreateGetSupportedStorageSourcesRequest(requestOptions);
             if (requestOptions?.PerCallPolicy != null)
             {
-                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions);
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
             }
             Pipeline.Send(message, cancellationToken);
             ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;
