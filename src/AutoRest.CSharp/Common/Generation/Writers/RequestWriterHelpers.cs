@@ -24,9 +24,8 @@ namespace AutoRest.CSharp.Generation.Writers
             using var methodScope = writer.AmbientScope();
             var parameters = clientMethod.Parameters;
 
-            var methodName = CreateRequestMethodName(clientMethod.Name);
-            var returnType = lowLevel ? typeof(Azure.Core.Request) : typeof(HttpMessage);
-            writer.Append($"{methodAccessibility} {returnType} {methodName}(");
+            var methodName = CreateRequestMethodName(clientMethod.Name, isMessage: lowLevel);
+            writer.Append($"{methodAccessibility} {typeof(HttpMessage)} {methodName}(");
             foreach (Parameter clientParameter in parameters)
             {
                 if (lowLevel)
@@ -198,7 +197,7 @@ namespace AutoRest.CSharp.Generation.Writers
                         throw new NotImplementedException(clientMethod.Request.Body?.GetType().FullName);
                 }
 
-                writer.Line($"return {(lowLevel ? request : message)};");
+                writer.Line($"return {message};");
             }
             writer.Line();
         }
@@ -214,7 +213,7 @@ namespace AutoRest.CSharp.Generation.Writers
             }
         }
 
-        public static string CreateRequestMethodName(string name) => $"Create{name}Request";
+        public static string CreateRequestMethodName(string name, bool isMessage = false) => isMessage ? $"Create{name}Message" : $"Create{name}Request";
 
         private static void WriteSerializeContent(CodeWriter writer, CodeWriterDeclaration request, ObjectSerialization bodySerialization, CodeWriterDelegate valueDelegate)
         {

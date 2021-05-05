@@ -47,7 +47,7 @@ namespace AutoRest.CSharp.Generation.Writers
             {
                 writer.WriteXmlDocumentationParameter(parameter.Name, parameter.Description);
             }
-            /*            
+            /*
                 if (requestOptions?.PerCallPolicy != null)
                 {
                     message.SetProperty ("RequestOptionsPerCallPolicyCallback", requestOptions);
@@ -82,7 +82,7 @@ namespace AutoRest.CSharp.Generation.Writers
 
             using (writer.Scope())
             {
-                writer.Append($"{typeof(Azure.Core.Request)} req = {RequestWriterHelpers.CreateRequestMethodName(clientMethod.Name)}(");
+                writer.Append($"{typeof(Azure.Core.HttpMessage)} message = {RequestWriterHelpers.CreateRequestMethodName(clientMethod.Name, true)}(");
 
                 foreach (var parameter in clientMethod.Parameters)
                 {
@@ -92,35 +92,32 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.Append($");");
                 writer.Line();
 
-                var responseVariable = new CodeWriterDeclaration("response");
-                writer.Append($"{typeof(Azure.Response)} {responseVariable:D} = ");
-
                 if (async)
                 {
-                    writer.Line($"await {PipelineField:I}.SendRequestAsync(req, cancellationToken).ConfigureAwait(false);");
+                    writer.Line($"await {PipelineField:I}.SendAsync(message, cancellationToken).ConfigureAwait(false);");
                 }
                 else
                 {
-                    writer.Line($"{PipelineField:I}.SendRequest(req, cancellationToken);");
+                    writer.Line($"{PipelineField:I}.Send(message, cancellationToken);");
                 }
 
                 writer.Line($"ResponseStatusOption statusOption = requestOptions?.StatusOption ?? ResponseStatusOption.Default;");
                 using (writer.Scope($"if (statusOption == ResponseStatusOption.Default)"))
                 {
-                    WriteStatusCodeSwitch(writer, responseVariable, clientMethod, async);
+                    WriteStatusCodeSwitch(writer, clientMethod, async);
                 }
                 using (writer.Scope($"else"))
                 {
-                    writer.Line($"return {responseVariable:I};");
+                    writer.Line($"return message.Response;");
                 }
             }
 
             writer.Line();
         }
 
-        private void WriteStatusCodeSwitch(CodeWriter writer, CodeWriterDeclaration responseVariable, RestClientMethod clientMethod, bool async)
+        private void WriteStatusCodeSwitch(CodeWriter writer, RestClientMethod clientMethod, bool async)
         {
-             using (writer.Scope($"switch ({responseVariable}.Status)"))
+             using (writer.Scope($"switch (message.Response.Status)"))
             {
                 foreach (var response in clientMethod.Responses)
                 {
@@ -139,16 +136,16 @@ namespace AutoRest.CSharp.Generation.Writers
                         }
                     }
                 }
-                writer.Line($"return {responseVariable:I};");
+                writer.Line($"return message.Response;");
 
                 writer.Line($"default:");
                 if (async)
                 {
-                    writer.Line($"throw await {ClientDiagnosticsField}.CreateRequestFailedExceptionAsync({responseVariable}).ConfigureAwait(false);");
+                    writer.Line($"throw await {ClientDiagnosticsField}.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);");
                 }
                 else
                 {
-                    writer.Line($"throw {ClientDiagnosticsField}.CreateRequestFailedException({responseVariable});");
+                    writer.Line($"throw {ClientDiagnosticsField}.CreateRequestFailedException(message.Response);");
                 }
             }
         }
