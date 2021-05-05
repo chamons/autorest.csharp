@@ -47,12 +47,6 @@ namespace AutoRest.CSharp.Generation.Writers
             {
                 writer.WriteXmlDocumentationParameter(parameter.Name, parameter.Description);
             }
-            /*
-                if (requestOptions?.PerCallPolicy != null)
-                {
-                    message.SetProperty ("RequestOptionsPerCallPolicyCallback", requestOptions);
-                }
-            */
             RequestWriterHelpers.WriteRequestCreation(writer, clientMethod, lowLevel: true, "private");
         }
 
@@ -91,6 +85,11 @@ namespace AutoRest.CSharp.Generation.Writers
                 writer.RemoveTrailingComma();
                 writer.Append($");");
                 writer.Line();
+
+                using (writer.Scope($"if (requestOptions?.PerCallPolicy != null)"))
+                {
+                    writer.Line($"message.SetProperty (\"RequestOptionsPerCallPolicyCallback\", requestOptions);");
+                }
 
                 if (async)
                 {
