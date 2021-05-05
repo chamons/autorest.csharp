@@ -88,7 +88,7 @@ namespace AutoRest.CSharp.Generation.Writers
 
                 using (writer.Scope($"if (requestOptions?.PerCallPolicy != null)"))
                 {
-                    writer.Line($"message.SetProperty (\"RequestOptionsPerCallPolicyCallback\", requestOptions);");
+                    writer.Line($"message.SetProperty (\"RequestOptionsPerCallPolicyCallback\", requestOptions.PerCallPolicy);");
                 }
 
                 if (async)
