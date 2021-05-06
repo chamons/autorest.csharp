@@ -1,6 +1,10 @@
 # Sample Management Generation
 
-Use the flag `--azure-arm` to specify you want to generate [management plane][mgmt] code. For more information, see our [flag index][flag_index]
+To generate a [management plane][mgmt] client library sample run:
+
+`npx autorest --csharp --azure-arm --require=readme.md --output-folder=.\Generated`
+
+For more information, see our [flag index][flag_index]
 
 ### Settings
 

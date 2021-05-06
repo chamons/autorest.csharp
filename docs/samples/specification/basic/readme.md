@@ -1,5 +1,9 @@
 # Sample Basic Generation
 
+To generate this client library sample run:
+
+`npx autorest --csharp --require=readme.md --output-folder=.\Generated`
+
 ### Settings
 
 ``` yaml
