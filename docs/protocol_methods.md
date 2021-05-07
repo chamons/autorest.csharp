@@ -6,20 +6,22 @@ Some SDK Clients expose methods which often take `RequestContent` parameters and
 
 For example:
 
-```
-        async Task<Response> GetDogAsync(RequestContent requestBody, CancellationToken cancellationToken = default)
-        async Task<Response> SetDogAsync(RequestContent requestBody, CancellationToken cancellationToken = default)
+```csharp
+        async Task<Response> GetDogAsync(RequestContent requestBody, RequestOptions options = default)
+        async Task<Response> SetDogAsync(RequestContent requestBody, RequestOptions options = default)
 ```
 
 instead of:
-```
-        async Task<Response<Pet>> GetDogAsync(string dogName, CancellationToken cancellationToken = default)
-        async Task<Response> SetDogAsync(Pet dog, CancellationToken cancellationToken = default)
+```csharp
+        async Task<Response<Pet>> GetDogAsync(string dogName, RequestOptions options = default)
+        async Task<Response> SetDogAsync(Pet dog, RequestOptions options = default)
 ```
 
 Those methods are called '**protocol methods**'. 
 
 This quickstart is designed to review their use and configuring autorest.csharp to generate clients with them.
+
+For details on creating a client with protocol methods see [the associated documentation][generate_protocol].
 
 ## Usage
 
@@ -42,13 +44,12 @@ Protocol methods need a JSON object of the shape required by the service in ques
 
 See the specific service documentation for details, but as a example:
 
-```
-        var data = new JsonData(
-            new Dictionary<string, object> {
+```csharp
+        var data = new Dictionary<string, object> {
                 ["name"] = "Buddy",
                 ["id"] = 2,
                 ["color"] = "Brown"
-            });
+        };
         await client.SetDogAsync(RequestContent.Create(data));
 ```
 
@@ -58,7 +59,7 @@ Protocol methods all return a `Response` object which contains information retur
 
 The most important field on Response indicates the status code returned:
 
-```
+```csharp
         Response response = await client.GetDogAsync(RequestContent.Create(new Dictionary<string, object> {
                 ["name"] = "Buddy"
         }));
@@ -69,7 +70,7 @@ By default protocol methods match the behavior of methods that return models by 
 
 This can be controlled by use of the `RequestOptions` parameter:
 
-```
+```csharp
         RequestOptions options = new RequestOptions (ResponseStatusOption.NoThrow);
         Response response = await client.GetDogAsync(RequestContent.Create(new Dictionary<string, object> {
                 ["name"] = "Buddy"
@@ -81,44 +82,26 @@ Some service methods return detailed information within the response. The easies
 
 See the service documentation for details, but as a example:
 
-```
+```csharp
         Response response = await client.GetDogAsync(RequestContent.Create(new Dictionary<string, object> {
                 ["name"] = "Buddy"
         }));
+        var doc = JsonDocument.Parse(result.Content.ToMemory());
         var responseBody = JsonData.FromBytes(response.Content.ToMemory());
-        string name = (string)responseBody["name"];
+        string name = doc.RootElement.GetProperty("name").GetString();
 ```
 
 ## Per Call Callbacks
 
 Protocol methods that take the `RequestOptions` type also allows easy access to callbacks when a response arrives:
 
-```
-        RequestOptions options = new RequestOptions (message => Console.WriteLine ("Dog Received: " + message)));
+```csharp
+        RequestOptions options = new RequestOptions (message => Console.WriteLine ("Sending dog request: " + message)));
         return client.GetDogAsync(RequestContent.Create(new Dictionary<string, object> {
                 ["name"] = "Buddy"
         }), options);
 ```
 
-## Creating Clients that use Protocol Methods
-
-Within the standard readme.md or autorest.md configuration file, set the following key:
-
-```
-low-level-client: true
-```
-
-Today autorest.csharp also requires a defined credential type [limitation issue](https://github.com/Azure/autorest.csharp/issues/1221):
-
-```
-credential-types: AzureKeyCredential
-credential-header-name: Ocp-Apim-Subscription-Key
-```
-and\or
-```
-credential-types: TokenCredential
-credential-scopes: https://example.azure.com/.default
-```
-
 <!-- LINKS -->
 [initializing]: ./client/initializing.md
+[generate_protocol]: ./generate/protocol.md
