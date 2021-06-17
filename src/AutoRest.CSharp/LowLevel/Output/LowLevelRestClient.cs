@@ -76,8 +76,16 @@ namespace AutoRest.CSharp.Output.Models
                             firstOptionalParameterIndex = parameters.Count;
                         }
                         parameters.Insert(firstOptionalParameterIndex, bodyParam);
+                        //parameters.Insert(0, bodyParam);
                         body = new RequestContentRequestBody(bodyParam);
                         schemaDocumentation = GetSchemaDocumentationsForParameter(bodyParameter);
+                    }
+
+                    var contentTypeParam = serviceRequest.Parameters.FirstOrDefault(p => p.Origin == "modelerfour:synthesized/content-type" &&
+                                                                                         p.Language.Default.SerializedName == "Content-Type");
+                    if (contentTypeParam != null)
+                    {
+
                     }
 
                     // Inject the RequestOptions

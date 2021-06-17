@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
@@ -147,6 +148,117 @@ namespace BodyAndPath_LowLevel
             uri.AppendPath(itemName, true);
             request.Uri = uri;
             request.Headers.Add("Content-Type", "application/json");
+            request.Content = requestBody;
+            return message;
+        }
+
+        /// <summary> Resets products. </summary>
+        /// <param name="itemNameStream"> item name. </param>
+        /// <param name="contentType"> Upload file type. </param>
+        /// <param name="requestBody"> The request body. </param>
+        /// <param name="excluded"> Excluded connection Ids. </param>
+        /// <param name="requestOptions"> The request options. </param>
+#pragma warning disable AZC0002
+        public virtual async Task<Response> CreateStreamAsync(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+#pragma warning restore AZC0002
+        {
+            requestOptions ??= new RequestOptions();
+            HttpMessage message = CreateCreateStreamRequest(itemNameStream, contentType, requestBody, excluded, requestOptions);
+            if (requestOptions.PerCallPolicy != null)
+            {
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
+            }
+            using var scope = _clientDiagnostics.CreateScope("BodyAndPathClient.CreateStream");
+            scope.Start();
+            try
+            {
+                await Pipeline.SendAsync(message, requestOptions.CancellationToken).ConfigureAwait(false);
+                if (requestOptions.StatusOption == ResponseStatusOption.Default)
+                {
+                    switch (message.Response.Status)
+                    {
+                        case 200:
+                            return message.Response;
+                        default:
+                            throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    return message.Response;
+                }
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Resets products. </summary>
+        /// <param name="itemNameStream"> item name. </param>
+        /// <param name="contentType"> Upload file type. </param>
+        /// <param name="requestBody"> The request body. </param>
+        /// <param name="excluded"> Excluded connection Ids. </param>
+        /// <param name="requestOptions"> The request options. </param>
+#pragma warning disable AZC0002
+        public virtual Response CreateStream(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+#pragma warning restore AZC0002
+        {
+            requestOptions ??= new RequestOptions();
+            HttpMessage message = CreateCreateStreamRequest(itemNameStream, contentType, requestBody, excluded, requestOptions);
+            if (requestOptions.PerCallPolicy != null)
+            {
+                message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
+            }
+            using var scope = _clientDiagnostics.CreateScope("BodyAndPathClient.CreateStream");
+            scope.Start();
+            try
+            {
+                Pipeline.Send(message, requestOptions.CancellationToken);
+                if (requestOptions.StatusOption == ResponseStatusOption.Default)
+                {
+                    switch (message.Response.Status)
+                    {
+                        case 200:
+                            return message.Response;
+                        default:
+                            throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+                    }
+                }
+                else
+                {
+                    return message.Response;
+                }
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create Request for <see cref="CreateStream"/> and <see cref="CreateStreamAsync"/> operations. </summary>
+        /// <param name="itemNameStream"> item name. </param>
+        /// <param name="contentType"> Upload file type. </param>
+        /// <param name="requestBody"> The request body. </param>
+        /// <param name="excluded"> Excluded connection Ids. </param>
+        /// <param name="requestOptions"> The request options. </param>
+        private HttpMessage CreateCreateStreamRequest(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+        {
+            var message = Pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(endpoint);
+            uri.AppendPath("/", false);
+            uri.AppendPath(itemNameStream, true);
+            if (excluded != null)
+            {
+                uri.AppendQueryDelimited("excluded", excluded, ",", true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", contentType);
             request.Content = requestBody;
             return message;
         }
