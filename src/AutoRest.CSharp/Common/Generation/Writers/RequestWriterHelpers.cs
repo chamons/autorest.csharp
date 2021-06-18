@@ -68,6 +68,9 @@ namespace AutoRest.CSharp.Generation.Writers
                     }
                 }
 
+
+                // If low level client, do we need to reorder the content-type query param BEFORE here, or is is written out elsewhere?
+
                 //TODO: Duplicate code between query and header parameter processing logic
                 foreach (var queryParameter in clientMethod.Request.Query)
                 {

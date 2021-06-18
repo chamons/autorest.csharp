@@ -71,12 +71,7 @@ namespace AutoRest.CSharp.Output.Models
                         // right before the first optional parameter.
                         Parameter bodyParam = new Parameter("requestBody", "The request body", typeof(Azure.Core.RequestContent), null, true);
                         int firstOptionalParameterIndex = parameters.FindIndex(p => p.DefaultValue != null);
-                        if (firstOptionalParameterIndex == -1)
-                        {
-                            firstOptionalParameterIndex = parameters.Count;
-                        }
-                        parameters.Insert(firstOptionalParameterIndex, bodyParam);
-                        //parameters.Insert(0, bodyParam);
+                        parameters.Insert(0, bodyParam);
                         body = new RequestContentRequestBody(bodyParam);
                         schemaDocumentation = GetSchemaDocumentationsForParameter(bodyParameter);
                     }

@@ -52,15 +52,15 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Resets products. </summary>
-        /// <param name="itemName"> item name. </param>
         /// <param name="requestBody"> The request body. </param>
+        /// <param name="itemName"> item name. </param>
         /// <param name="requestOptions"> The request options. </param>
 #pragma warning disable AZC0002
-        public virtual async Task<Response> CreateAsync(string itemName, RequestContent requestBody, RequestOptions requestOptions = null)
+        public virtual async Task<Response> CreateAsync(RequestContent requestBody, string itemName, RequestOptions requestOptions = null)
 #pragma warning restore AZC0002
         {
             requestOptions ??= new RequestOptions();
-            HttpMessage message = CreateCreateRequest(itemName, requestBody, requestOptions);
+            HttpMessage message = CreateCreateRequest(requestBody, itemName, requestOptions);
             if (requestOptions.PerCallPolicy != null)
             {
                 message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
@@ -93,15 +93,15 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Resets products. </summary>
-        /// <param name="itemName"> item name. </param>
         /// <param name="requestBody"> The request body. </param>
+        /// <param name="itemName"> item name. </param>
         /// <param name="requestOptions"> The request options. </param>
 #pragma warning disable AZC0002
-        public virtual Response Create(string itemName, RequestContent requestBody, RequestOptions requestOptions = null)
+        public virtual Response Create(RequestContent requestBody, string itemName, RequestOptions requestOptions = null)
 #pragma warning restore AZC0002
         {
             requestOptions ??= new RequestOptions();
-            HttpMessage message = CreateCreateRequest(itemName, requestBody, requestOptions);
+            HttpMessage message = CreateCreateRequest(requestBody, itemName, requestOptions);
             if (requestOptions.PerCallPolicy != null)
             {
                 message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
@@ -134,10 +134,10 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Create Request for <see cref="Create"/> and <see cref="CreateAsync"/> operations. </summary>
-        /// <param name="itemName"> item name. </param>
         /// <param name="requestBody"> The request body. </param>
+        /// <param name="itemName"> item name. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateCreateRequest(string itemName, RequestContent requestBody, RequestOptions requestOptions = null)
+        private HttpMessage CreateCreateRequest(RequestContent requestBody, string itemName, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
@@ -153,17 +153,17 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Resets products. </summary>
+        /// <param name="requestBody"> The request body. </param>
         /// <param name="itemNameStream"> item name. </param>
         /// <param name="contentType"> Upload file type. </param>
-        /// <param name="requestBody"> The request body. </param>
         /// <param name="excluded"> Excluded connection Ids. </param>
         /// <param name="requestOptions"> The request options. </param>
 #pragma warning disable AZC0002
-        public virtual async Task<Response> CreateStreamAsync(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+        public virtual async Task<Response> CreateStreamAsync(RequestContent requestBody, string itemNameStream, string contentType, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
 #pragma warning restore AZC0002
         {
             requestOptions ??= new RequestOptions();
-            HttpMessage message = CreateCreateStreamRequest(itemNameStream, contentType, requestBody, excluded, requestOptions);
+            HttpMessage message = CreateCreateStreamRequest(requestBody, itemNameStream, contentType, excluded, requestOptions);
             if (requestOptions.PerCallPolicy != null)
             {
                 message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
@@ -196,17 +196,17 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Resets products. </summary>
+        /// <param name="requestBody"> The request body. </param>
         /// <param name="itemNameStream"> item name. </param>
         /// <param name="contentType"> Upload file type. </param>
-        /// <param name="requestBody"> The request body. </param>
         /// <param name="excluded"> Excluded connection Ids. </param>
         /// <param name="requestOptions"> The request options. </param>
 #pragma warning disable AZC0002
-        public virtual Response CreateStream(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+        public virtual Response CreateStream(RequestContent requestBody, string itemNameStream, string contentType, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
 #pragma warning restore AZC0002
         {
             requestOptions ??= new RequestOptions();
-            HttpMessage message = CreateCreateStreamRequest(itemNameStream, contentType, requestBody, excluded, requestOptions);
+            HttpMessage message = CreateCreateStreamRequest(requestBody, itemNameStream, contentType, excluded, requestOptions);
             if (requestOptions.PerCallPolicy != null)
             {
                 message.SetProperty("RequestOptionsPerCallPolicyCallback", requestOptions.PerCallPolicy);
@@ -239,12 +239,12 @@ namespace BodyAndPath_LowLevel
         }
 
         /// <summary> Create Request for <see cref="CreateStream"/> and <see cref="CreateStreamAsync"/> operations. </summary>
+        /// <param name="requestBody"> The request body. </param>
         /// <param name="itemNameStream"> item name. </param>
         /// <param name="contentType"> Upload file type. </param>
-        /// <param name="requestBody"> The request body. </param>
         /// <param name="excluded"> Excluded connection Ids. </param>
         /// <param name="requestOptions"> The request options. </param>
-        private HttpMessage CreateCreateStreamRequest(string itemNameStream, string contentType, RequestContent requestBody, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
+        private HttpMessage CreateCreateStreamRequest(RequestContent requestBody, string itemNameStream, string contentType, IEnumerable<string> excluded = null, RequestOptions requestOptions = null)
         {
             var message = Pipeline.CreateMessage();
             var request = message.Request;
