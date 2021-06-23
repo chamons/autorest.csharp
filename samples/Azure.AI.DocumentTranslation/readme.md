@@ -5,7 +5,6 @@ Run `dotnet build /t:GenerateCode` to generate code.
 
 ``` yaml
 # The title here is used to generate the single ClientOptions class name.
-title: Question Answering
 license-header: MICROSOFT_MIT_NO_VERSION
 require: $(this-folder)/../../readme.md
 batch:
@@ -22,36 +21,3 @@ modelerfour:
 ## Customizations
 
 Customizations that should eventually be added to central autorest configuration.
-
-### General customizations
-
-Support automatically generating code for key credentials.
-
-``` yaml
-directive:
-- from: swagger-document
-  where: $.securityDefinitions
-  transform: |
-    $["AzureKey"] = $["apim_key"];
-    delete $["apim_key"];
-- from: swagger-document
-  where: $.security
-  transform: |
-    $ = [
-        {
-          "AzureKey": []
-        }
-    ];
-```
-
-### C# customizations
-
-``` yaml
-directive:
-# - from: swagger-document
-#   where: $.definitions.*
-#   transform: $["x-accessibility"] = "internal"
-- from: swagger-document
-  where: $.parameters.Endpoint
-  transform: $["format"] = "url"
-```

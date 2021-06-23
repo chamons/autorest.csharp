@@ -18,7 +18,7 @@ namespace Azure.AI.DocumentTranslation
 {
     internal partial class QuestionAnsweringKnowledgebaseRestClient
     {
-        private Uri endpoint;
+        private string endpoint;
         private string apiVersion;
         private ClientDiagnostics _clientDiagnostics;
         private HttpPipeline _pipeline;
@@ -29,7 +29,7 @@ namespace Azure.AI.DocumentTranslation
         /// <param name="endpoint"> Supported Cognitive Services endpoint (e.g., https://&lt;resource-name&gt;.api.cognitiveservices.azure.com). </param>
         /// <param name="apiVersion"> Api Version. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/> or <paramref name="apiVersion"/> is null. </exception>
-        public QuestionAnsweringKnowledgebaseRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint, string apiVersion = "2021-05-01-preview")
+        public QuestionAnsweringKnowledgebaseRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string endpoint, string apiVersion = "2021-05-01-preview")
         {
             if (endpoint == null)
             {
@@ -52,7 +52,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/:query-knowledgebases", false);
             uri.AppendQuery("projectName", projectName, true);

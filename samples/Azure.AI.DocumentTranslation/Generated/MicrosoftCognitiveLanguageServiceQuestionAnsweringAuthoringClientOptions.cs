@@ -10,8 +10,8 @@ using Azure.Core;
 
 namespace Azure.AI.DocumentTranslation
 {
-    /// <summary> Client options for QuestionAnsweringClient. </summary>
-    public partial class QuestionAnsweringClientOptions : ClientOptions
+    /// <summary> Client options for MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClient. </summary>
+    public partial class MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClientOptions : ClientOptions
     {
         private const ServiceVersion LatestVersion = ServiceVersion.V2021_05_01_preview;
 
@@ -24,8 +24,8 @@ namespace Azure.AI.DocumentTranslation
 
         internal string Version { get; }
 
-        /// <summary> Initializes new instance of QuestionAnsweringClientOptions. </summary>
-        public QuestionAnsweringClientOptions(ServiceVersion version = LatestVersion)
+        /// <summary> Initializes new instance of MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClientOptions. </summary>
+        public MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClientOptions(ServiceVersion version = LatestVersion)
         {
             Version = version switch
             {

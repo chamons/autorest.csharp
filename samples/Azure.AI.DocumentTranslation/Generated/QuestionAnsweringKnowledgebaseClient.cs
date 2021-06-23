@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.DocumentTranslation.Models;
-using Azure.Core;
 using Azure.Core.Pipeline;
 
 namespace Azure.AI.DocumentTranslation
@@ -28,32 +27,11 @@ namespace Azure.AI.DocumentTranslation
         }
 
         /// <summary> Initializes a new instance of QuestionAnsweringKnowledgebaseClient. </summary>
-        /// <param name="endpoint"> Supported Cognitive Services endpoint (e.g., https://&lt;resource-name&gt;.api.cognitiveservices.azure.com). </param>
-        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
-        /// <param name="options"> The options for configuring the client. </param>
-        public QuestionAnsweringKnowledgebaseClient(Uri endpoint, AzureKeyCredential credential, QuestionAnsweringClientOptions options = null)
-        {
-            if (endpoint == null)
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-            if (credential == null)
-            {
-                throw new ArgumentNullException(nameof(credential));
-            }
-
-            options ??= new QuestionAnsweringClientOptions();
-            _clientDiagnostics = new ClientDiagnostics(options);
-            _pipeline = HttpPipelineBuilder.Build(options, new AzureKeyCredentialPolicy(credential, "Ocp-Apim-Subscription-Key"));
-            RestClient = new QuestionAnsweringKnowledgebaseRestClient(_clientDiagnostics, _pipeline, endpoint, options.Version);
-        }
-
-        /// <summary> Initializes a new instance of QuestionAnsweringKnowledgebaseClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> Supported Cognitive Services endpoint (e.g., https://&lt;resource-name&gt;.api.cognitiveservices.azure.com). </param>
         /// <param name="apiVersion"> Api Version. </param>
-        internal QuestionAnsweringKnowledgebaseClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint, string apiVersion = "2021-05-01-preview")
+        internal QuestionAnsweringKnowledgebaseClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string endpoint, string apiVersion = "2021-05-01-preview")
         {
             RestClient = new QuestionAnsweringKnowledgebaseRestClient(clientDiagnostics, pipeline, endpoint, apiVersion);
             _clientDiagnostics = clientDiagnostics;

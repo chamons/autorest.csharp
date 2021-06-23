@@ -11,7 +11,7 @@ using Azure.AI.DocumentTranslation.Models;
 namespace Azure.AI.DocumentTranslation
 {
     /// <summary> Model factory for read-only models. </summary>
-    public static partial class QuestionAnsweringModelFactory
+    public static partial class MicrosoftCognitiveLanguageServiceQuestionAnsweringModelFactory
     {
         /// <summary> Initializes new instance of KnowledgebaseAnswers class. </summary>
         /// <param name="answers"> Represents Answer Result list. </param>

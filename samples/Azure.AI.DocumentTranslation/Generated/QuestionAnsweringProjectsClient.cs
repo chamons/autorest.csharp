@@ -18,9 +18,7 @@ namespace Azure.AI.DocumentTranslation
     {
         /// <summary> The HTTP pipeline for sending and receiving REST requests and responses. </summary>
         public virtual HttpPipeline Pipeline { get; }
-        private const string AuthorizationHeader = "Ocp-Apim-Subscription-Key";
-        private readonly AzureKeyCredential _keyCredential;
-        private Uri endpoint;
+        private string endpoint;
         private readonly string apiVersion;
         private readonly ClientDiagnostics _clientDiagnostics;
 
@@ -31,24 +29,17 @@ namespace Azure.AI.DocumentTranslation
 
         /// <summary> Initializes a new instance of QuestionAnsweringProjectsClient. </summary>
         /// <param name="endpoint"> Supported Cognitive Services endpoint (e.g., https://&lt;resource-name&gt;.api.cognitiveservices.azure.com). </param>
-        /// <param name="credential"> A credential used to authenticate to an Azure Service. </param>
         /// <param name="options"> The options for configuring the client. </param>
-        public QuestionAnsweringProjectsClient(Uri endpoint, AzureKeyCredential credential, QuestionAnsweringClientOptions options = null)
+        public QuestionAnsweringProjectsClient(string endpoint, MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClientOptions options = null)
         {
             if (endpoint == null)
             {
                 throw new ArgumentNullException(nameof(endpoint));
             }
-            if (credential == null)
-            {
-                throw new ArgumentNullException(nameof(credential));
-            }
 
-            options ??= new QuestionAnsweringClientOptions();
+            options ??= new MicrosoftCognitiveLanguageServiceQuestionAnsweringAuthoringClientOptions();
             _clientDiagnostics = new ClientDiagnostics(options);
-            _keyCredential = credential;
-            var authPolicy = new AzureKeyCredentialPolicy(_keyCredential, AuthorizationHeader);
-            Pipeline = HttpPipelineBuilder.Build(options, new HttpPipelinePolicy[] { new LowLevelCallbackPolicy() }, new HttpPipelinePolicy[] { authPolicy }, new ResponseClassifier());
+            Pipeline = HttpPipelineBuilder.Build(options, new HttpPipelinePolicy[] { new LowLevelCallbackPolicy() }, Array.Empty<HttpPipelinePolicy>(), new ResponseClassifier());
             this.endpoint = endpoint;
             apiVersion = options.Version;
         }
@@ -139,7 +130,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects", false);
             uri.AppendQuery("api-version", apiVersion, true);
@@ -237,7 +228,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -423,7 +414,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Put;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -524,7 +515,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Delete;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -663,7 +654,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -772,7 +763,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -1423,7 +1414,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -1532,7 +1523,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -1636,7 +1627,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Put;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
@@ -1743,7 +1734,7 @@ namespace Azure.AI.DocumentTranslation
             var request = message.Request;
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
-            uri.Reset(endpoint);
+            uri.AppendRaw(endpoint, false);
             uri.AppendRaw("/language", false);
             uri.AppendPath("/query-knowledgebases/projects/", false);
             uri.AppendPath(projectName, true);
